@@ -13,13 +13,13 @@ macros for javascript
 2. require `lazymacro` in your source code
 
     ```js
-    require('lazymacro')
+    require('lazymacro');
     ```
 
 3. enjoy the macros:
 
     ```js
-    ["I", "am"].WITH(v => v.push("lazynode.")).WITH(console.log).PIPE(v => v.join(" ")).PIPE(v => console.log(`${v}`))
+    ["I", "am"].WITH(v => v.push("lazynode.")).WITH(console.log).PIPE(v => v.join(" ")).PIPE(v => console.log(`${v}`))?.PIPE(v => console.log("null safety features can be used together!"));
     ```
 
 ## reference
@@ -54,9 +54,19 @@ RESULT = OBJECT.MARCO(ARGUMENT)
     await Promise.resolve(5).THEN(v => v + 1) === 6
     ```
 
+- `XMAP`: similar to `Array.map` but support `Object`
+
+    ```js
+    ["O", "K"].XMAP(v => v.toLowerCase()).PIPE(v => v.join('')) == "ok"
+    ```
+
+    ```js
+    ({ o: "O", k: "K" }).XMAP((v, k) => k + v.toLowerCase()).PIPE(v => v.join('')) == "ookk"
+    ```
+
 ### this macros
 
-**ARROW FUCTION EXPRESSIONS CANNOT BE USED AS PARAMETER OF THIS MACROS BECAUSE `this` is LOST IN ARROW FUNCTION EXPRESSIONS**
+> **ARROW FUCTION EXPRESSIONS CANNOT BE USED AS PARAMETER OF THIS MACROS BECAUSE `this` is LOST IN ARROW FUNCTION EXPRESSIONS**
 
 - `PIPETHIS`: same as `PIPE` but use `this` instead of the function paramter
 
@@ -74,4 +84,10 @@ RESULT = OBJECT.MARCO(ARGUMENT)
 
     ```js
     await Promise.resolve("OK").THENTHIS(function () { return this.toLowerCase() }) == "ok"
+    ```
+
+- `XMAPTHIS`: same as `XMAP` but use `this` instead of the function paramter
+
+    ```js
+    ["O", "K"].XMAPTHIS(function () { return this.toLowerCase() }).PIPE(v => v.join('')) == "ok"
     ```
