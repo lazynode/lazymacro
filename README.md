@@ -1,0 +1,2 @@
+# lazymacro
+macros for javascript
