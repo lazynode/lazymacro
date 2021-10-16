@@ -1,6 +1,6 @@
 {
     "name": "lazymacro",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "macros for javascript",
     "main": "index.js",
     "scripts": {},
