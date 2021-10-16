@@ -24,21 +24,17 @@ macros for javascript
 
 ## reference
 
-for better description, the meanings of variables in this section can be referenced below where `MACRO` can be replace by the explained macro
-
-```
-RESULT = OBJECT.MARCO(ARGUMENT)
-```
+the macros provided in lazymacro
 
 ### basic macros
 
-- `PIPE`: using a function `ARGUMENT` to convert `OBJECT` to `RESULT`
+- `PIPE`: `O.PIPE(F)` returns `F(O)`
 
     ```js
     "OK".PIPE(v => v + "!") == "OK!"
     ```
 
-- `WITH`: apply a function `ARGUMENT` to `OBJECT` and return `OBJECT`
+- `WITH`: `O.WITH(F)` runs `F(O)` and returns `O`
 
     ```js
     ["O", "K"].WITH(v => v.push("!")).PIPE(v => v.join('')) == 'OK!'
@@ -48,13 +44,19 @@ RESULT = OBJECT.MARCO(ARGUMENT)
     "OK".WITH(v => v + "!") == "OK!"
     ```
 
-- `THEN`: same as `Promise.then`
+- `THEN`: `O.THEN(F)` returns `O.then(F)` 
 
     ```js
     await Promise.resolve(5).THEN(v => v + 1) === 6
     ```
 
-- `XMAP`: similar to `Array.map` but support `Object`
+- `WAIT`: `O.WAIT(F)` awaits `O.then(F)` returns `O`
+
+    ```js
+    await Promise.resolve(["O", "K"]).WAIT(async v => new Promise(resolve => setTimeout(() => resolve(v.push("!")), 1000))).THEN(v => v.join('')) == "OK!"
+    ```
+
+- `XMAP`: `O.XMAP(F)` returns an array of `F(o, k)` where `o` and `k` are each element of `O`
 
     ```js
     ["O", "K"].XMAP(v => v.toLowerCase()).PIPE(v => v.join('')) == "ok"
@@ -66,28 +68,36 @@ RESULT = OBJECT.MARCO(ARGUMENT)
 
 ### this macros
 
-> **ARROW FUCTION EXPRESSIONS CANNOT BE USED AS PARAMETER OF THIS MACROS BECAUSE `this` is LOST IN ARROW FUNCTION EXPRESSIONS**
+same as the related basic macro but use `this` instead of the function paramter
 
-- `PIPETHIS`: same as `PIPE` but use `this` instead of the function paramter
+arrow fuction expressions cannot be used as parameter of this macros because `this` is lost in arrow function expressions
+
+- `PIPETHIS`
 
     ```js
     "OK".PIPETHIS(function () { return this.toLowerCase() }) == "ok"
     ```
 
-- `WITHTHIS`: same as `WITH` but use `this` instead of the function paramter
+- `WITHTHIS`
 
     ```js
     ["O", "K"].WITHTHIS(function () { this.push("!") }).PIPE(v => v.join('')) == 'OK!'
     ```
 
-- `THENTHIS`: same as `THEN` but use `this` instead of the function paramter
+- `THENTHIS`
 
     ```js
     await Promise.resolve("OK").THENTHIS(function () { return this.toLowerCase() }) == "ok"
     ```
 
-- `XMAPTHIS`: same as `XMAP` but use `this` instead of the function paramter
+- `XMAPTHIS`
 
     ```js
     ["O", "K"].XMAPTHIS(function () { return this.toLowerCase() }).PIPE(v => v.join('')) == "ok"
+    ```
+
+- `WAITTHIS`
+
+    ```js
+    await Promise.resolve(["O", "K"]).WAITTHIS(async function () { await new Promise(resolve => setTimeout(resolve, 1000)); this.push("!") }).THEN(v => v.join('')) == "OK!"
     ```
