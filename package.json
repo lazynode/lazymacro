@@ -1,0 +1,21 @@
+{
+    "name": "lazymacro",
+    "version": "0.0.1",
+    "description": "macros for javascript",
+    "main": "index.js",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/lazynode/lazymacro.git"
+    },
+    "keywords": [
+        "macro",
+        "javascript"
+    ],
+    "author": "lazynode",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/lazynode/lazymacro/issues"
+    },
+    "homepage": "https://github.com/lazynode/lazymacro"
+}
