@@ -19,7 +19,7 @@ macros for javascript
 3. enjoy the macros:
 
     ```js
-    ["I", "am"].WITH(v => v.push("lazynode.")).WITH(v => console.log(v)).PIPE(v => v.join(" ")).PIPE(v => console.log(`${v}`))
+    ["I", "am"].WITH(v => v.push("lazynode.")).WITH(console.log).PIPE(v => v.join(" ")).PIPE(v => console.log(`${v}`))
     ```
 
 ## reference
@@ -48,6 +48,12 @@ RESULT = OBJECT.MARCO(ARGUMENT)
     "OK".WITH(v => v + "!") == "OK!"
     ```
 
+- `THEN`: same as `Promise.then`
+
+    ```js
+    await Promise.resolve(5).THEN(v => v + 1) === 6
+    ```
+
 ### this macros
 
 **ARROW FUCTION EXPRESSIONS CANNOT BE USED AS PARAMETER OF THIS MACROS BECAUSE `this` is LOST IN ARROW FUNCTION EXPRESSIONS**
@@ -62,4 +68,10 @@ RESULT = OBJECT.MARCO(ARGUMENT)
 
     ```js
     ["O", "K"].WITHTHIS(function () { this.push("!") }).PIPE(v => v.join('')) == 'OK!'
+    ```
+
+- `THENTHIS`: same as `THEN` but use `this` instead of the function paramter
+
+    ```js
+    await Promise.resolve("OK").THENTHIS(function () { return this.toLowerCase() }) == "ok"
     ```
