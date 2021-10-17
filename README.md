@@ -53,7 +53,7 @@ the macros provided in lazymacro
 - `WAIT`: `O.WAIT(F)` awaits `O.then(F)` returns `O`
 
     ```js
-    await Promise.resolve(["O", "K"]).WAIT(async v => new Promise(resolve => setTimeout(() => resolve(v.push("!")), 1000))).THEN(v => v.join('')) == "OK!"
+    await Promise.resolve(["O", "K"]).WAIT(async v => await new Promise(resolve => setTimeout(() => resolve(v.push("!")), 1000))).THEN(v => v.join('')) == "OK!"
     ```
 
 - `XMAP`: `O.XMAP(F)` returns an array of `F(o, k)` where `o` and `k` are each element of `O`
@@ -65,6 +65,23 @@ the macros provided in lazymacro
     ```js
     ({ o: "O", k: "K" }).XMAP((v, k) => k + v.toLowerCase()).PIPE(v => v.join('')) == "ookk"
     ```
+
+### lazy macro
+
+`LAZY` will automatically choose one from `PIPE`, `WITH`, `THEN` and `WAIT` for you
+
+for `O.LAZY(F)`:
+
+- `WAIT`is chosen if `O` is a `Promise` and `O.then(F)` is an empty promise
+- `THEN`is chosen if `O` is a `Promise` and `O.then(F)` is not an empty promise
+- `WITH`is chosen if `O` is not a `Promise` and `F(O)` is an empty promise
+- `PIPE`is chosen if `O` is not a `Promise` and `F(O)` is not an empty promise
+
+example:
+
+```js
+["I", "am"].LAZY(v => { v.push("lazynode.") }).LAZY(v => { console.log(v) }).LAZY(v => v.join(" ")).LAZY(v => { console.log(`${v}`) })?.LAZY(v => console.log("null safety features can be used together!"));
+```
 
 ### this macros
 
@@ -90,14 +107,14 @@ arrow fuction expressions cannot be used as parameter of this macros because `th
     await Promise.resolve("OK").THENTHIS(function () { return this.toLowerCase() }) == "ok"
     ```
 
-- `XMAPTHIS`
-
-    ```js
-    ["O", "K"].XMAPTHIS(function () { return this.toLowerCase() }).PIPE(v => v.join('')) == "ok"
-    ```
-
 - `WAITTHIS`
 
     ```js
     await Promise.resolve(["O", "K"]).WAITTHIS(async function () { await new Promise(resolve => setTimeout(resolve, 1000)); this.push("!") }).THEN(v => v.join('')) == "OK!"
+    ```
+
+- `XMAPTHIS`
+
+    ```js
+    ["O", "K"].XMAPTHIS(function () { return this.toLowerCase() }).PIPE(v => v.join('')) == "ok"
     ```
